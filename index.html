@@ -503,6 +503,10 @@
         }
         .nav-parent:hover .nav-folder-del { opacity: 1; }
         .nav-folder-del:hover { color: #e06c75; }
+        .nav-child .nav-folder-del { opacity: 0; }
+        .nav-child:hover .nav-folder-del { opacity: 1; }
+        .nav-add-sub { cursor: pointer; }
+        .nav-add-sub:hover { background: var(--surface-2); }
 
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
 
@@ -830,12 +834,44 @@ function addCustomFolder(name) {
     tree.push(folder);
     saveCustomFolders();
     buildSidebar();
+    return folder;
+}
+function addCustomSubfolder(parentId, name) {
+    if (!name || !name.trim()) return;
+    name = name.trim();
+    const parent = tree.find(t => t.id === parentId);
+    if (!parent) return;
+    const subId = parentId + '.' + Date.now();
+    parent.children.push({ id: subId, label: name });
+    saveCustomFolders();
+    buildSidebar();
+    return subId;
+}
+function deleteCustomSubfolder(parentId, subId) {
+    const parent = tree.find(t => t.id === parentId);
+    if (!parent) return;
+    const idx = parent.children.findIndex(c => c.id === subId);
+    if (idx === -1) return;
+    designs.forEach(d => {
+        if (d.sub === subId) {
+            d.group = parentId;
+            d.sub = parentId;
+            saveMove(d.id, parentId, parentId);
+        }
+    });
+    parent.children.splice(idx, 1);
+    saveCustomFolders();
+    if (currentFilter === subId) currentFilter = parentId;
+    buildSidebar();
+    renderContent();
 }
 function deleteCustomFolder(folderId) {
     const idx = tree.findIndex(t => t.id === folderId);
     if (idx === -1) return;
+    const folder = tree[idx];
+    const subIds = (folder.children || []).map(c => c.id);
     designs.forEach(d => {
-        if (d.group === folderId) {
+        if (d.group === folderId || subIds.includes(d.sub)) {
             d.group = 'other';
             d.sub = 'other';
             saveMove(d.id, 'other', 'other');
@@ -843,7 +879,7 @@ function deleteCustomFolder(folderId) {
     });
     tree.splice(idx, 1);
     saveCustomFolders();
-    if (currentFilter === folderId) currentFilter = 'all';
+    if (currentFilter === folderId || subIds.includes(currentFilter)) currentFilter = 'all';
     buildSidebar();
     renderContent();
 }
@@ -886,9 +922,21 @@ function buildSidebar() {
             html += `<div class="nav-child" data-filter="${c.id}" onclick="navigate('${c.id}',this)">
                 <div class="nav-child-dot"></div>
                 ${c.label}
+                ${isCustom ? `<button class="nav-folder-del" onclick="event.stopPropagation();deleteCustomSubfolder('${g.id}','${c.id}')" title="מחק תת-נושא">&#10005;</button>` : ''}
                 <span class="nav-count">${countBySub[c.id] || 0}</span>
             </div>`;
         });
+        if (isCustom) {
+            html += `<div class="nav-child nav-add-sub" onclick="event.stopPropagation();showSubfolderInput('${g.id}')">
+                <div class="nav-child-dot" style="background:var(--accent-2)"></div>
+                <span style="color:var(--accent-2)">+ תת-נושא</span>
+            </div>`;
+            html += `<div class="folder-input-row" id="subFolderRow_${g.id}" style="display:none">
+                <input type="text" id="subFolderName_${g.id}" placeholder="שם תת-הנושא..." onkeydown="if(event.key==='Enter')submitSubfolder('${g.id}');if(event.key==='Escape')this.parentElement.style.display='none'">
+                <button class="fi-ok" onclick="submitSubfolder('${g.id}')">&#10003;</button>
+                <button class="fi-cancel" onclick="document.getElementById('subFolderRow_${g.id}').style.display='none'">&#10005;</button>
+            </div>`;
+        }
         html += `</div></div>`;
     });
 
@@ -1118,6 +1166,22 @@ function submitNewFolder() {
     }
     hideNewFolderInput();
 }
+function showSubfolderInput(parentId) {
+    const row = document.getElementById('subFolderRow_' + parentId);
+    if (!row) return;
+    row.style.display = 'flex';
+    const inp = document.getElementById('subFolderName_' + parentId);
+    inp.value = '';
+    inp.focus();
+}
+function submitSubfolder(parentId) {
+    const inp = document.getElementById('subFolderName_' + parentId);
+    if (!inp) return;
+    const name = inp.value;
+    if (name.trim()) {
+        addCustomSubfolder(parentId, name);
+    }
+}
 
 // ═══════════════════════════════════════════════
 // Delete
@@ -1165,17 +1229,28 @@ function openCatalog(id) {
 
     tree.forEach(g => {
         const hasChildren = g.children && g.children.length > 0;
-        if (hasChildren) {
-            html += '<div class="catalog-group">';
-            html += '<div class="catalog-group-title"><span class="cg-dot" style="background:' + g.color + '"></span>' + g.label + '</div>';
+        const isCustom = g.custom;
+        if (hasChildren || isCustom) {
+            html += '<div class="catalog-group" data-gid="' + g.id + '">';
+            const isGroupCurrent = d.group === g.id && d.sub === g.id;
+            html += '<div class="catalog-group-title" onclick="moveTo(\'' + id + '\',\'' + g.id + '\',\'' + g.id + '\')"><span class="cg-dot" style="background:' + g.color + '"></span>' + g.label;
+            if (isGroupCurrent) html += ' &#10003;';
+            html += '</div>';
             html += '<div class="catalog-sub">';
-            g.children.forEach(c => {
+            (g.children || []).forEach(c => {
                 const isCurrent = d.sub === c.id;
                 html += '<div class="catalog-option' + (isCurrent ? ' current' : '') + '" onclick="moveTo(\'' + id + '\',\'' + g.id + '\',\'' + c.id + '\')">';
                 html += '<span class="co-dot"></span>' + c.label;
                 if (isCurrent) html += ' &#10003;';
                 html += '</div>';
             });
+            if (isCustom) {
+                html += '<div class="catalog-option" style="color:var(--accent-2)" onclick="event.stopPropagation();showCatalogSubInput(\'' + g.id + '\')"><span class="co-dot" style="background:var(--accent-2)"></span>+ תת-נושא חדש</div>';
+                html += '<div class="catalog-input-row" id="catalogSubRow_' + g.id + '" style="display:none">';
+                html += '<input type="text" id="catalogSubName_' + g.id + '" placeholder="שם תת-הנושא..." onkeydown="if(event.key===\'Enter\')submitCatalogSub(\'' + g.id + '\');if(event.key===\'Escape\')this.parentElement.style.display=\'none\'">';
+                html += '<button class="fi-ok" onclick="submitCatalogSub(\'' + g.id + '\')">&#10003;</button>';
+                html += '</div>';
+            }
             html += '</div></div>';
         } else {
             const isCurrent = d.group === g.id;
@@ -1210,6 +1285,22 @@ function submitCatalogNewFolder() {
     const newFolder = tree[tree.length - 1];
     if (catalogDesignId) {
         moveTo(catalogDesignId, newFolder.id, newFolder.id);
+    }
+}
+function showCatalogSubInput(parentId) {
+    const row = document.getElementById('catalogSubRow_' + parentId);
+    if (!row) return;
+    row.style.display = 'flex';
+    var inp = document.getElementById('catalogSubName_' + parentId);
+    inp.value = '';
+    inp.focus();
+}
+function submitCatalogSub(parentId) {
+    var inp = document.getElementById('catalogSubName_' + parentId);
+    if (!inp || !inp.value.trim()) return;
+    var subId = addCustomSubfolder(parentId, inp.value);
+    if (subId && catalogDesignId) {
+        moveTo(catalogDesignId, parentId, subId);
     }
 }
 
