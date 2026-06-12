@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
     <meta charset="UTF-8">
@@ -213,6 +213,16 @@
             overflow: hidden; position: relative;
         }
         .card-thumb img { width: 100%; height: 100%; object-fit: cover; }
+        .card-thumb-fallback {
+            display: none; width: 100%; height: 100%;
+            flex-direction: column; align-items: center; justify-content: center;
+            gap: 8px; padding: 16px; text-align: center;
+        }
+        .card-thumb-fallback .fb-icon { font-size: 32px; opacity: 0.4; }
+        .card-thumb-fallback .fb-title {
+            font-size: 11px; color: var(--text-dim); line-height: 1.4;
+            max-height: 46px; overflow: hidden; word-break: break-word;
+        }
         .card-overlay {
             position: absolute; inset: 0; background: rgba(0,0,0,0.6);
             display: flex; align-items: center; justify-content: center;
@@ -717,119 +727,119 @@ const tree = [
 // ═══════════════════════════════════════════════
 const designs = [
     // ── מצגות ──
-    { id:"DAGmtJO7Wp8", title:"מצגת: הרצאה - מהנדסים - א", group:"pres", sub:"pres", pages:175, thumb:"https://design.canva.ai/sko2ycwTDybrwXI", edit:"https://www.canva.com/d/7ikMcU27w6vxJZS", view:"https://www.canva.com/d/5ffaq19uC4UayVR" },
-    { id:"DAHJKMXIJIU", title:"Cream Minimal Architectural Engineering Presentation", group:"pres", sub:"pres", pages:37, thumb:"https://design.canva.ai/jVIxLnkwksbxDwe", edit:"https://www.canva.com/d/tGdUd6LIfV8px7w", view:"https://www.canva.com/d/O6JwyfjpCPXa_L3" },
-    { id:"DAHDqh8Avq8", title:"מצגת: מידע", group:"pres", sub:"pres", pages:1, thumb:"https://design.canva.ai/H6rloQmqUJI4QYD", edit:"https://www.canva.com/d/mNeu8YKTPwLj0uQ", view:"https://www.canva.com/d/KGvLOiUlO12Ap9T" },
-    { id:"DAHCChV4O4Y", title:"מצגת: תכנון", group:"pres", sub:"pres", pages:47, thumb:"https://design.canva.ai/wQl2B5hFIrtLQWF", edit:"https://www.canva.com/d/4cEcAbbxIfDPTIb", view:"https://www.canva.com/d/jeyaY1nquX3A-a5" },
-    { id:"DAHCHXOavnc", title:"מצגת: יוזמות לתוכנית אב", group:"pres", sub:"pres", pages:25, thumb:"https://design.canva.ai/Ni3FavbriI_8iIm", edit:"https://www.canva.com/d/n_cXBEccpzsrR-M", view:"https://www.canva.com/d/Iv-Dpbof_Srlzu-" },
-    { id:"DAHENORAeZo", title:"מצגת פיקוח 2025-2026", group:"pres", sub:"pres", pages:6, thumb:"https://design.canva.ai/ho49JP25LmwhdUu", edit:"https://www.canva.com/d/jCQpoW3BzI6tKVy", view:"https://www.canva.com/d/NkiaLuE2jTDiqmQ" },
-    { id:"DAG0BH027qk", title:"מצגת: ביומימטיקה מתקדמת", group:"pres", sub:"pres", pages:8, thumb:"https://design.canva.ai/eS6rZogAIBgJHtS", edit:"https://www.canva.com/d/Rir2YF8DyopreMB", view:"https://www.canva.com/d/kRwE7j5DycHPVBJ" },
-    { id:"DAG8KCNGkcg", title:"מצגת: הערים הגלויות של יונתן גפן", group:"pres", sub:"pres", pages:18, thumb:"https://design.canva.ai/DyckDq77AWsQw5z", edit:"https://www.canva.com/d/CRq1osF0vIAA5hR", view:"https://www.canva.com/d/sj7cl5cEIblPfyZ" },
-    { id:"DAGn4ByjFqE", title:"מצגת: יוזמה - רובע ב", group:"pres", sub:"pres", pages:22, thumb:"https://design.canva.ai/Js5XLSibVwFXDWB", edit:"https://www.canva.com/d/8R2fKSOGVqVUVgP", view:"https://www.canva.com/d/ZtrS-osZJaK2CTt" },
-    { id:"DAGn_B8IbTk", title:"מצגת: משימה - הטיילת", group:"pres", sub:"pres", pages:34, thumb:"https://design.canva.ai/0uldIZATlwWHGK9", edit:"https://www.canva.com/d/i-WMtFkEkkYtI_c", view:"https://www.canva.com/d/Z7SjBXQcvwRW4qa" },
-    { id:"DAGiGcyQ0Ik", title:"מצגת: עניין - אופנה", group:"pres", sub:"pres", pages:46, thumb:"https://design.canva.ai/yiTrCU8j2W94leb", edit:"https://www.canva.com/d/YRWh7BMN05tonAF", view:"https://www.canva.com/d/LKoVSElj-OAsPNR" },
+    { id:"DAGmtJO7Wp8", title:"מצגת: הרצאה - מהנדסים - א", group:"pres", sub:"pres", pages:175, thumb:"thumbs/DAGmtJO7Wp8.png", edit:"https://www.canva.com/d/7ikMcU27w6vxJZS", view:"https://www.canva.com/d/5ffaq19uC4UayVR" },
+    { id:"DAHJKMXIJIU", title:"Cream Minimal Architectural Engineering Presentation", group:"pres", sub:"pres", pages:37, thumb:"thumbs/DAHJKMXIJIU.png", edit:"https://www.canva.com/d/tGdUd6LIfV8px7w", view:"https://www.canva.com/d/O6JwyfjpCPXa_L3" },
+    { id:"DAHDqh8Avq8", title:"מצגת: מידע", group:"pres", sub:"pres", pages:1, thumb:"thumbs/DAHDqh8Avq8.png", edit:"https://www.canva.com/d/mNeu8YKTPwLj0uQ", view:"https://www.canva.com/d/KGvLOiUlO12Ap9T" },
+    { id:"DAHCChV4O4Y", title:"מצגת: תכנון", group:"pres", sub:"pres", pages:47, thumb:"thumbs/DAHCChV4O4Y.png", edit:"https://www.canva.com/d/4cEcAbbxIfDPTIb", view:"https://www.canva.com/d/jeyaY1nquX3A-a5" },
+    { id:"DAHCHXOavnc", title:"מצגת: יוזמות לתוכנית אב", group:"pres", sub:"pres", pages:25, thumb:"thumbs/DAHCHXOavnc.png", edit:"https://www.canva.com/d/n_cXBEccpzsrR-M", view:"https://www.canva.com/d/Iv-Dpbof_Srlzu-" },
+    { id:"DAHENORAeZo", title:"מצגת פיקוח 2025-2026", group:"pres", sub:"pres", pages:6, thumb:"thumbs/DAHENORAeZo.png", edit:"https://www.canva.com/d/jCQpoW3BzI6tKVy", view:"https://www.canva.com/d/NkiaLuE2jTDiqmQ" },
+    { id:"DAG0BH027qk", title:"מצגת: ביומימטיקה מתקדמת", group:"pres", sub:"pres", pages:8, thumb:"thumbs/DAG0BH027qk.png", edit:"https://www.canva.com/d/Rir2YF8DyopreMB", view:"https://www.canva.com/d/kRwE7j5DycHPVBJ" },
+    { id:"DAG8KCNGkcg", title:"מצגת: הערים הגלויות של יונתן גפן", group:"pres", sub:"pres", pages:18, thumb:"thumbs/DAG8KCNGkcg.png", edit:"https://www.canva.com/d/CRq1osF0vIAA5hR", view:"https://www.canva.com/d/sj7cl5cEIblPfyZ" },
+    { id:"DAGn4ByjFqE", title:"מצגת: יוזמה - רובע ב", group:"pres", sub:"pres", pages:22, thumb:"thumbs/DAGn4ByjFqE.png", edit:"https://www.canva.com/d/8R2fKSOGVqVUVgP", view:"https://www.canva.com/d/ZtrS-osZJaK2CTt" },
+    { id:"DAGn_B8IbTk", title:"מצגת: משימה - הטיילת", group:"pres", sub:"pres", pages:34, thumb:"thumbs/DAGn_B8IbTk.png", edit:"https://www.canva.com/d/i-WMtFkEkkYtI_c", view:"https://www.canva.com/d/Z7SjBXQcvwRW4qa" },
+    { id:"DAGiGcyQ0Ik", title:"מצגת: עניין - אופנה", group:"pres", sub:"pres", pages:46, thumb:"thumbs/DAGiGcyQ0Ik.png", edit:"https://www.canva.com/d/YRWh7BMN05tonAF", view:"https://www.canva.com/d/LKoVSElj-OAsPNR" },
 
     // ── סרטונים > הדמייה ──
-    { id:"DAHDzjs452g", title:"סרטון הדמייה: פיקוח", group:"video", sub:"video.sim", pages:1, thumb:"https://design.canva.ai/m45q3xupxOryS3w", edit:"https://www.canva.com/d/H1YnqfUJGLDtRN6", view:"https://www.canva.com/d/7PFkh_a9it0ZGKa" },
-    { id:"DAHEP78Da_s", title:"סרטון הדמייה: רישוי", group:"video", sub:"video.sim", pages:1, thumb:"https://design.canva.ai/uRf52Ptq8c-Un_B", edit:"https://www.canva.com/d/klp4rziebVm6fMx", view:"https://www.canva.com/d/AlC0tk06gdeY578" },
-    { id:"DAHEl6MWX6Y", title:"סרטון הדמיה: אגרות", group:"video", sub:"video.sim", pages:1, thumb:"https://design.canva.ai/S-hRn1q71qpMAXi", edit:"https://www.canva.com/d/E9dj2nReNK4YxKZ", view:"https://www.canva.com/d/waQ_z2KAOljXuEp" },
-    { id:"DAHEQKCI3_Q", title:"סרטון הדמייה: נכסים", group:"video", sub:"video.sim", pages:1, thumb:"https://design.canva.ai/JoDtnFg03cPomZa", edit:"https://www.canva.com/d/15d54dTiZKfm6QQ", view:"https://www.canva.com/d/O2qzoOIo0zQDYsy" },
-    { id:"DAHEG2lAbOc", title:"סרטון הדמייה: השבחה", group:"video", sub:"video.sim", pages:1, thumb:"https://design.canva.ai/22-fR0y1hPbyFVK", edit:"https://www.canva.com/d/k1tpxdHCmCMZU3b", view:"https://www.canva.com/d/3rsPVxBykPTBDvj" },
+    { id:"DAHDzjs452g", title:"סרטון הדמייה: פיקוח", group:"video", sub:"video.sim", pages:1, thumb:"thumbs/DAHDzjs452g.png", edit:"https://www.canva.com/d/H1YnqfUJGLDtRN6", view:"https://www.canva.com/d/7PFkh_a9it0ZGKa" },
+    { id:"DAHEP78Da_s", title:"סרטון הדמייה: רישוי", group:"video", sub:"video.sim", pages:1, thumb:"thumbs/DAHEP78Da_s.png", edit:"https://www.canva.com/d/klp4rziebVm6fMx", view:"https://www.canva.com/d/AlC0tk06gdeY578" },
+    { id:"DAHEl6MWX6Y", title:"סרטון הדמיה: אגרות", group:"video", sub:"video.sim", pages:1, thumb:"thumbs/DAHEl6MWX6Y.png", edit:"https://www.canva.com/d/E9dj2nReNK4YxKZ", view:"https://www.canva.com/d/waQ_z2KAOljXuEp" },
+    { id:"DAHEQKCI3_Q", title:"סרטון הדמייה: נכסים", group:"video", sub:"video.sim", pages:1, thumb:"thumbs/DAHEQKCI3_Q.png", edit:"https://www.canva.com/d/15d54dTiZKfm6QQ", view:"https://www.canva.com/d/O2qzoOIo0zQDYsy" },
+    { id:"DAHEG2lAbOc", title:"סרטון הדמייה: השבחה", group:"video", sub:"video.sim", pages:1, thumb:"thumbs/DAHEG2lAbOc.png", edit:"https://www.canva.com/d/k1tpxdHCmCMZU3b", view:"https://www.canva.com/d/3rsPVxBykPTBDvj" },
 
     // ── סרטונים > עשייה ──
-    { id:"DAHEP8hrqE4", title:"סרטון: עשייה - אגרות והיטלים", group:"video", sub:"video.action", pages:1, thumb:"https://design.canva.ai/7wNLduKtvOb2Rs8", edit:"https://www.canva.com/d/IPmH-59JYLdcu6Q", view:"https://www.canva.com/d/0wE67FyzlLLYg4X" },
-    { id:"DAHIzyhNDGg", title:"סרטון: עשייה - חשמל", group:"video", sub:"video.action", pages:1, thumb:"https://design.canva.ai/UIiNK0vOY1wlMGr", edit:"https://www.canva.com/d/DutpqW-QGrX4Xss", view:"https://www.canva.com/d/1rEazRjIYZAPZgD" },
+    { id:"DAHEP8hrqE4", title:"סרטון: עשייה - אגרות והיטלים", group:"video", sub:"video.action", pages:1, thumb:"thumbs/DAHEP8hrqE4.png", edit:"https://www.canva.com/d/IPmH-59JYLdcu6Q", view:"https://www.canva.com/d/0wE67FyzlLLYg4X" },
+    { id:"DAHIzyhNDGg", title:"סרטון: עשייה - חשמל", group:"video", sub:"video.action", pages:1, thumb:"thumbs/DAHIzyhNDGg.png", edit:"https://www.canva.com/d/DutpqW-QGrX4Xss", view:"https://www.canva.com/d/1rEazRjIYZAPZgD" },
 
     // ── סרטונים > כלליים ──
-    { id:"DAHCeHWfBBM", title:"סרטון: מה זה בשבילי מנהל הנדסה", group:"video", sub:"video.general", pages:2, thumb:"https://design.canva.ai/8tkaES4fE90b11a", edit:"https://www.canva.com/d/PMLdOfUclV5u7Li", view:"https://www.canva.com/d/Cy3v17gK2ytGRHp" },
-    { id:"DAHCvt38xa8", title:"סרטון: תוכניות בינוי - מרחב ביניים", group:"video", sub:"video.general", pages:1, thumb:"https://design.canva.ai/uxR7OhIKYE80PzX", edit:"https://www.canva.com/d/P6cOf4OGckiAyA_", view:"https://www.canva.com/d/FBDC6q88vmEyioD" },
-    { id:"DAHCvPJKrMw", title:"סרטון: הדרכים המובילות לים", group:"video", sub:"video.general", pages:1, thumb:"https://design.canva.ai/ZADylo25GiZsnYZ", edit:"https://www.canva.com/d/UHU9Mlh-VErp-7S", view:"https://www.canva.com/d/98ml7WCbxWhQyI-" },
-    { id:"DAGhzMG7i_A", title:"סרטון: הרצאה - אדריכלי איחוד - הכנה", group:"video", sub:"video.general", pages:53, thumb:"https://design.canva.ai/iYC5JKFfbPI1TF6", edit:"https://www.canva.com/d/Ety-vRj2w4C6Exi", view:"https://www.canva.com/d/c5QrMXJX29GWily" },
-    { id:"DAHLcDZYBKg", title:"ענת סרטון אפ 2", group:"video", sub:"video.general", pages:4, thumb:"https://design.canva.ai/yuvRnHF3Gq6Hwr9", edit:"https://www.canva.com/d/AO_-kBg73kw0HpI", view:"https://www.canva.com/d/Tian6B6Et68wNNO" },
-    { id:"DAHLaoB2GyI", title:"ענת - סרטון אפ 1", group:"video", sub:"video.general", pages:1, thumb:"https://design.canva.ai/y8CMU8ip-2nBel5", edit:"https://www.canva.com/d/2_21js0FAnwBHrL", view:"https://www.canva.com/d/-Rvce7Wgr1-0LpM" },
+    { id:"DAHCeHWfBBM", title:"סרטון: מה זה בשבילי מנהל הנדסה", group:"video", sub:"video.general", pages:2, thumb:"thumbs/DAHCeHWfBBM.png", edit:"https://www.canva.com/d/PMLdOfUclV5u7Li", view:"https://www.canva.com/d/Cy3v17gK2ytGRHp" },
+    { id:"DAHCvt38xa8", title:"סרטון: תוכניות בינוי - מרחב ביניים", group:"video", sub:"video.general", pages:1, thumb:"thumbs/DAHCvt38xa8.png", edit:"https://www.canva.com/d/P6cOf4OGckiAyA_", view:"https://www.canva.com/d/FBDC6q88vmEyioD" },
+    { id:"DAHCvPJKrMw", title:"סרטון: הדרכים המובילות לים", group:"video", sub:"video.general", pages:1, thumb:"thumbs/DAHCvPJKrMw.png", edit:"https://www.canva.com/d/UHU9Mlh-VErp-7S", view:"https://www.canva.com/d/98ml7WCbxWhQyI-" },
+    { id:"DAGhzMG7i_A", title:"סרטון: הרצאה - אדריכלי איחוד - הכנה", group:"video", sub:"video.general", pages:53, thumb:"thumbs/DAGhzMG7i_A.png", edit:"https://www.canva.com/d/Ety-vRj2w4C6Exi", view:"https://www.canva.com/d/c5QrMXJX29GWily" },
+    { id:"DAHLcDZYBKg", title:"ענת סרטון אפ 2", group:"video", sub:"video.general", pages:4, thumb:"thumbs/DAHLcDZYBKg.png", edit:"https://www.canva.com/d/AO_-kBg73kw0HpI", view:"https://www.canva.com/d/Tian6B6Et68wNNO" },
+    { id:"DAHLaoB2GyI", title:"ענת - סרטון אפ 1", group:"video", sub:"video.general", pages:1, thumb:"thumbs/DAHLaoB2GyI.png", edit:"https://www.canva.com/d/2_21js0FAnwBHrL", view:"https://www.canva.com/d/-Rvce7Wgr1-0LpM" },
 
     // ── סרטים ──
-    { id:"DAHC5TPRMIk", title:"סרט: תכנון - תוכניות", group:"film", sub:"film", pages:6, thumb:"https://design.canva.ai/PTIL6mPA6YI2TEK", edit:"https://www.canva.com/d/BBFG8EkzKrYOSUl", view:"https://www.canva.com/d/0AOreIR4qWk6kTd" },
-    { id:"DAHC5O8FK2E", title:"סרט: רישוי - בקשות להיתר", group:"film", sub:"film", pages:8, thumb:"https://design.canva.ai/QLmk6lxAm5KyRFo", edit:"https://www.canva.com/d/2MfmN7bd00LLaWM", view:"https://www.canva.com/d/QfZfuCvmWI8QwtV" },
-    { id:"DAGhO3ocnnE", title:"קולאז': סרט: משימה: הטיילת", group:"film", sub:"film", pages:24, thumb:"https://design.canva.ai/jYEiFl3X4bx_zwL", edit:"https://www.canva.com/d/5qnEO1hL8YOqUCZ", view:"https://www.canva.com/d/tJNQh4HOFKvJYSW" },
-    { id:"DAGhO2T--6E", title:"סרט: 3 - מרחב אין סוף", group:"film", sub:"film", pages:9, thumb:"https://design.canva.ai/ZWS1ls1-DlkHqTd", edit:"https://www.canva.com/d/ylQimNfefsxV1Cg", view:"https://www.canva.com/d/fFNNxyF7t7L6MHZ" },
-    { id:"DAGhO-zYj8A", title:"סרט: 23 - פואטיקה של המרחב", group:"film", sub:"film", pages:14, thumb:"https://design.canva.ai/QvQ4shYliUddpt3", edit:"https://www.canva.com/d/ZebKI2qZvqQcSPO", view:"https://www.canva.com/d/Si3Rx_1W5scxAkY" },
-    { id:"DAGhOzxaRbU", title:"סרט: 8 - מרחבים נושמים", group:"film", sub:"film", pages:17, thumb:"https://design.canva.ai/CXhWY1lXv57Nk_p", edit:"https://www.canva.com/d/OjX6o2NKcBR8YJY", view:"https://www.canva.com/d/ISVnEOL7bzl-unw" },
-    { id:"DAGhOx6qPyE", title:"סרט: 6 - תשוקת המבנה", group:"film", sub:"film", pages:13, thumb:"https://design.canva.ai/d0eCkzJJNdIwbzl", edit:"https://www.canva.com/d/dIEY4kdUCw_9SGk", view:"https://www.canva.com/d/yTgGzA5vh91iwK9" },
+    { id:"DAHC5TPRMIk", title:"סרט: תכנון - תוכניות", group:"film", sub:"film", pages:6, thumb:"thumbs/DAHC5TPRMIk.png", edit:"https://www.canva.com/d/BBFG8EkzKrYOSUl", view:"https://www.canva.com/d/0AOreIR4qWk6kTd" },
+    { id:"DAHC5O8FK2E", title:"סרט: רישוי - בקשות להיתר", group:"film", sub:"film", pages:8, thumb:"thumbs/DAHC5O8FK2E.png", edit:"https://www.canva.com/d/2MfmN7bd00LLaWM", view:"https://www.canva.com/d/QfZfuCvmWI8QwtV" },
+    { id:"DAGhO3ocnnE", title:"קולאז': סרט: משימה: הטיילת", group:"film", sub:"film", pages:24, thumb:"thumbs/DAGhO3ocnnE.png", edit:"https://www.canva.com/d/5qnEO1hL8YOqUCZ", view:"https://www.canva.com/d/tJNQh4HOFKvJYSW" },
+    { id:"DAGhO2T--6E", title:"סרט: 3 - מרחב אין סוף", group:"film", sub:"film", pages:9, thumb:"thumbs/DAGhO2T--6E.png", edit:"https://www.canva.com/d/ylQimNfefsxV1Cg", view:"https://www.canva.com/d/fFNNxyF7t7L6MHZ" },
+    { id:"DAGhO-zYj8A", title:"סרט: 23 - פואטיקה של המרחב", group:"film", sub:"film", pages:14, thumb:"thumbs/DAGhO-zYj8A.png", edit:"https://www.canva.com/d/ZebKI2qZvqQcSPO", view:"https://www.canva.com/d/Si3Rx_1W5scxAkY" },
+    { id:"DAGhOzxaRbU", title:"סרט: 8 - מרחבים נושמים", group:"film", sub:"film", pages:17, thumb:"thumbs/DAGhOzxaRbU.png", edit:"https://www.canva.com/d/OjX6o2NKcBR8YJY", view:"https://www.canva.com/d/ISVnEOL7bzl-unw" },
+    { id:"DAGhOx6qPyE", title:"סרט: 6 - תשוקת המבנה", group:"film", sub:"film", pages:13, thumb:"thumbs/DAGhOx6qPyE.png", edit:"https://www.canva.com/d/dIEY4kdUCw_9SGk", view:"https://www.canva.com/d/yTgGzA5vh91iwK9" },
 
     // ── משימות ──
-    { id:"DAHD6cHuuf4", title:"משימה: מצגת מנהל הנדסה 14-3-2026", group:"task", sub:"task", pages:47, thumb:"https://design.canva.ai/h_t7K_Bq6oJp6y7", edit:"https://www.canva.com/d/XgMd8LSXOwYBu1n", view:"https://www.canva.com/d/C841Z-PMIT9uT_7" },
-    { id:"DAHCtwd3jRI", title:"משימה: מצגת מנהל הנדסה 1-3-2026", group:"task", sub:"task", pages:70, thumb:"https://design.canva.ai/hl6DyNt2p_a8fWP", edit:"https://www.canva.com/d/MgiLdvbQ0hlDK2y", view:"https://www.canva.com/d/CBpI5pXSlfyILtM" },
-    { id:"DAG_ai9Z1u4", title:"משימה: סגירות חורץ - צ'ק ליסט", group:"task", sub:"task", pages:1, thumb:"https://design.canva.ai/GuoAOjZ5YsSoMri", edit:"https://www.canva.com/d/9BYJi8suwRq8J59", view:"https://www.canva.com/d/TqAf7byzBSkvhUI" },
-    { id:"DAHH9Tn4GOY", title:"משימה: איאד - מיקום פסלים ברחבת העירייה", group:"task", sub:"task", pages:11, thumb:"https://design.canva.ai/bIGCrtubR37CNBH", edit:"https://www.canva.com/d/g271cHb5-wT_tP_", view:"https://www.canva.com/d/b4ZokJB6U-gn7g4" },
-    { id:"DAHBnJ4F3Qs", title:"משימה: אילן - מיצב כלניות - שלט", group:"task", sub:"task", pages:5, thumb:"https://design.canva.ai/w1VsNsGjFSdxiO7", edit:"https://www.canva.com/d/PykWjX__B03mSjQ", view:"https://www.canva.com/d/mzvlRK9Y769bhdo" },
-    { id:"DAG_n4kg_hA", title:"משימה: אתר הנצחה", group:"task", sub:"task", pages:8, thumb:"https://design.canva.ai/NuQQf3AxqmhOjxP", edit:"https://www.canva.com/d/5NKSX2BquG3t6jT", view:"https://www.canva.com/d/C9yQMOB6T0Ix20p" },
+    { id:"DAHD6cHuuf4", title:"משימה: מצגת מנהל הנדסה 14-3-2026", group:"task", sub:"task", pages:47, thumb:"thumbs/DAHD6cHuuf4.png", edit:"https://www.canva.com/d/XgMd8LSXOwYBu1n", view:"https://www.canva.com/d/C841Z-PMIT9uT_7" },
+    { id:"DAHCtwd3jRI", title:"משימה: מצגת מנהל הנדסה 1-3-2026", group:"task", sub:"task", pages:70, thumb:"thumbs/DAHCtwd3jRI.png", edit:"https://www.canva.com/d/MgiLdvbQ0hlDK2y", view:"https://www.canva.com/d/CBpI5pXSlfyILtM" },
+    { id:"DAG_ai9Z1u4", title:"משימה: סגירות חורץ - צ'ק ליסט", group:"task", sub:"task", pages:1, thumb:"thumbs/DAG_ai9Z1u4.png", edit:"https://www.canva.com/d/9BYJi8suwRq8J59", view:"https://www.canva.com/d/TqAf7byzBSkvhUI" },
+    { id:"DAHH9Tn4GOY", title:"משימה: איאד - מיקום פסלים ברחבת העירייה", group:"task", sub:"task", pages:11, thumb:"thumbs/DAHH9Tn4GOY.png", edit:"https://www.canva.com/d/g271cHb5-wT_tP_", view:"https://www.canva.com/d/b4ZokJB6U-gn7g4" },
+    { id:"DAHBnJ4F3Qs", title:"משימה: אילן - מיצב כלניות - שלט", group:"task", sub:"task", pages:5, thumb:"thumbs/DAHBnJ4F3Qs.png", edit:"https://www.canva.com/d/PykWjX__B03mSjQ", view:"https://www.canva.com/d/mzvlRK9Y769bhdo" },
+    { id:"DAG_n4kg_hA", title:"משימה: אתר הנצחה", group:"task", sub:"task", pages:8, thumb:"thumbs/DAG_n4kg_hA.png", edit:"https://www.canva.com/d/5NKSX2BquG3t6jT", view:"https://www.canva.com/d/C9yQMOB6T0Ix20p" },
 
     // ── יוזמות ופרויקטים ──
-    { id:"DAHA2P9qwbM", title:"יוזמה: ריצוף חניות פתוחות", group:"init", sub:"init", pages:1, thumb:"https://design.canva.ai/GifXYTeQEEK-xKa", edit:"https://www.canva.com/d/eebI7dmGwZhNSkP", view:"https://www.canva.com/d/fiI3P2lPKrGf96x" },
-    { id:"DAGsYoOVS2M", title:"יוזמה: מתקן לנגני רחוב", group:"init", sub:"init", pages:12, thumb:"https://design.canva.ai/hX4GfiT2o5bn6qF", edit:"https://www.canva.com/d/psXn9JkPcnuSePZ", view:"https://www.canva.com/d/N-TUyayDU3ac0xY" },
-    { id:"DAHG7ZEJWW4", title:"פרויקט: תדהר - אשפה", group:"init", sub:"init", pages:1, thumb:"https://design.canva.ai/OJo4VERnrEnAzlR", edit:"https://www.canva.com/d/DDU_OnLwDcsEQbI", view:"https://www.canva.com/d/uxwQbCTSw58Q4zk" },
+    { id:"DAHA2P9qwbM", title:"יוזמה: ריצוף חניות פתוחות", group:"init", sub:"init", pages:1, thumb:"thumbs/DAHA2P9qwbM.png", edit:"https://www.canva.com/d/eebI7dmGwZhNSkP", view:"https://www.canva.com/d/fiI3P2lPKrGf96x" },
+    { id:"DAGsYoOVS2M", title:"יוזמה: מתקן לנגני רחוב", group:"init", sub:"init", pages:12, thumb:"thumbs/DAGsYoOVS2M.png", edit:"https://www.canva.com/d/psXn9JkPcnuSePZ", view:"https://www.canva.com/d/N-TUyayDU3ac0xY" },
+    { id:"DAHG7ZEJWW4", title:"פרויקט: תדהר - אשפה", group:"init", sub:"init", pages:1, thumb:"thumbs/DAHG7ZEJWW4.png", edit:"https://www.canva.com/d/DDU_OnLwDcsEQbI", view:"https://www.canva.com/d/uxwQbCTSw58Q4zk" },
 
     // ── כנסים ותערוכות ──
-    { id:"DAHIs62dwxg", title:"כרטיסיות לכנס מנהל הנדסה 2025", group:"conf", sub:"conf", pages:23, thumb:"https://design.canva.ai/toDXbQm5CbaP8eW", edit:"https://www.canva.com/d/CYd69oXr-_esJSx", view:"https://www.canva.com/d/GQcei5CaGqyXFlD" },
-    { id:"DAHI0egRaJk", title:"כרטיסיות: כנס מנהל הנדסה", group:"conf", sub:"conf", pages:10, thumb:"https://design.canva.ai/w3nE8A1n9PXz_VD", edit:"https://www.canva.com/d/g41guZLN9BKlfJV", view:"https://www.canva.com/d/EeYh8l3gTpsfOdo" },
-    { id:"DAHI7JXKvQs", title:"כנס סיכום 2025 מנהל הנדסה", group:"conf", sub:"conf", pages:1, thumb:"https://design.canva.ai/xcDnyJ8lK0518tU", edit:"https://www.canva.com/d/aTOORIUlvSVsq_Y", view:"https://www.canva.com/d/BcKxeW97d8ux7QC" },
-    { id:"DAGlou8IEw8", title:"תערוכה: תמונות כנס אדריכלים מהנדסים", group:"conf", sub:"conf", pages:51, thumb:"https://design.canva.ai/r5nOI8HcQ4oyS64", edit:"https://www.canva.com/d/H0mgW80fmL0c3uV", view:"https://www.canva.com/d/yfMWd5GM--NG-EZ" },
-    { id:"DAHGWZEi69k", title:"תמונות תערוכה כנס מהנדסים אדריכלים שניר", group:"conf", sub:"conf", pages:5, thumb:"https://design.canva.ai/ZpDqoA2BsZPKJwk", edit:"https://www.canva.com/d/Q6rNIacV6OgPyt8", view:"https://www.canva.com/d/j1ygnnoJ7t0oF2W" },
+    { id:"DAHIs62dwxg", title:"כרטיסיות לכנס מנהל הנדסה 2025", group:"conf", sub:"conf", pages:23, thumb:"thumbs/DAHIs62dwxg.png", edit:"https://www.canva.com/d/CYd69oXr-_esJSx", view:"https://www.canva.com/d/GQcei5CaGqyXFlD" },
+    { id:"DAHI0egRaJk", title:"כרטיסיות: כנס מנהל הנדסה", group:"conf", sub:"conf", pages:10, thumb:"thumbs/DAHI0egRaJk.png", edit:"https://www.canva.com/d/g41guZLN9BKlfJV", view:"https://www.canva.com/d/EeYh8l3gTpsfOdo" },
+    { id:"DAHI7JXKvQs", title:"כנס סיכום 2025 מנהל הנדסה", group:"conf", sub:"conf", pages:1, thumb:"thumbs/DAHI7JXKvQs.png", edit:"https://www.canva.com/d/aTOORIUlvSVsq_Y", view:"https://www.canva.com/d/BcKxeW97d8ux7QC" },
+    { id:"DAGlou8IEw8", title:"תערוכה: תמונות כנס אדריכלים מהנדסים", group:"conf", sub:"conf", pages:51, thumb:"thumbs/DAGlou8IEw8.png", edit:"https://www.canva.com/d/H0mgW80fmL0c3uV", view:"https://www.canva.com/d/yfMWd5GM--NG-EZ" },
+    { id:"DAHGWZEi69k", title:"תמונות תערוכה כנס מהנדסים אדריכלים שניר", group:"conf", sub:"conf", pages:5, thumb:"thumbs/DAHGWZEi69k.png", edit:"https://www.canva.com/d/Q6rNIacV6OgPyt8", view:"https://www.canva.com/d/j1ygnnoJ7t0oF2W" },
 
     // ── תוכניות בינוי > רובע ז ──
-    { id:"DAHA0HQYu4I", title:"תוכנית בינוי: רובע ז - צ'ק ליסט", group:"plan", sub:"plan.qz", pages:1, thumb:"https://design.canva.ai/lDhwy182sagzxB0", edit:"https://www.canva.com/d/xFU9deYIWoUs69k", view:"https://www.canva.com/d/BxavyLzwBzC5ayC" },
-    { id:"DAHJjqLhxCc", title:"רובע ז - עדכונים ושינויים מהתבע", group:"plan", sub:"plan.qz", pages:1, thumb:"https://design.canva.ai/mGSgxbo13L5S5-c", edit:"https://www.canva.com/d/QOezEUH9DVEvVQ-", view:"https://www.canva.com/d/AJmRF0f6TBi3v5w" },
+    { id:"DAHA0HQYu4I", title:"תוכנית בינוי: רובע ז - צ'ק ליסט", group:"plan", sub:"plan.qz", pages:1, thumb:"thumbs/DAHA0HQYu4I.png", edit:"https://www.canva.com/d/xFU9deYIWoUs69k", view:"https://www.canva.com/d/BxavyLzwBzC5ayC" },
+    { id:"DAHJjqLhxCc", title:"רובע ז - עדכונים ושינויים מהתבע", group:"plan", sub:"plan.qz", pages:1, thumb:"thumbs/DAHJjqLhxCc.png", edit:"https://www.canva.com/d/QOezEUH9DVEvVQ-", view:"https://www.canva.com/d/AJmRF0f6TBi3v5w" },
 
     // ── תוכניות בינוי > מגרש 502 ──
-    { id:"DAGkEKwUIho", title:"מסמך: תשריט 502", group:"plan", sub:"plan.502", pages:1, thumb:"https://design.canva.ai/T97p-RXXItmsTZ7", edit:"https://www.canva.com/d/0VfTEp4YYcgp0nP", view:"https://www.canva.com/d/QSavw6EqI3KNhU6" },
-    { id:"DAGkEE8jeKE", title:"מסמך: חוות דעת לוועדה - 502", group:"plan", sub:"plan.502", pages:1, thumb:"https://design.canva.ai/1X-9sRmZ2nyI-FQ", edit:"https://www.canva.com/d/8yt8ML_qPM-WYkF", view:"https://www.canva.com/d/XDBVWhO_3nuLkH7" },
-    { id:"DAGkEIYrFyg", title:"תכנית בינוי מגרש 502.pdf", group:"plan", sub:"plan.502", pages:1, thumb:"https://design.canva.ai/2c4qxGzWPWcvSUz", edit:"https://www.canva.com/d/1vnpKT7-wv6zQ0j", view:"https://www.canva.com/d/z_x2qut80R_bJBM" },
-    { id:"DAGkECFKfF0", title:"1055493_M.pdf", group:"plan", sub:"plan.502", pages:1, thumb:"https://design.canva.ai/skSsTx9-d33-ud4", edit:"https://www.canva.com/d/kXlCDCjqM2dys4r", view:"https://www.canva.com/d/OjYHtayGAotYFN4" },
+    { id:"DAGkEKwUIho", title:"מסמך: תשריט 502", group:"plan", sub:"plan.502", pages:1, thumb:"thumbs/DAGkEKwUIho.png", edit:"https://www.canva.com/d/0VfTEp4YYcgp0nP", view:"https://www.canva.com/d/QSavw6EqI3KNhU6" },
+    { id:"DAGkEE8jeKE", title:"מסמך: חוות דעת לוועדה - 502", group:"plan", sub:"plan.502", pages:1, thumb:"thumbs/DAGkEE8jeKE.png", edit:"https://www.canva.com/d/8yt8ML_qPM-WYkF", view:"https://www.canva.com/d/XDBVWhO_3nuLkH7" },
+    { id:"DAGkEIYrFyg", title:"תכנית בינוי מגרש 502.pdf", group:"plan", sub:"plan.502", pages:1, thumb:"thumbs/DAGkEIYrFyg.png", edit:"https://www.canva.com/d/1vnpKT7-wv6zQ0j", view:"https://www.canva.com/d/z_x2qut80R_bJBM" },
+    { id:"DAGkECFKfF0", title:"1055493_M.pdf", group:"plan", sub:"plan.502", pages:1, thumb:"thumbs/DAGkECFKfF0.png", edit:"https://www.canva.com/d/kXlCDCjqM2dys4r", view:"https://www.canva.com/d/OjYHtayGAotYFN4" },
 
     // ── תוכניות בינוי > כללי ──
-    { id:"DAHJQiQdcrs", title:"תוכנית בינוי: מכתב אישור", group:"plan", sub:"plan.general", pages:5, thumb:"https://design.canva.ai/FVs07VWwlnh5LHs", edit:"https://www.canva.com/d/ILK_n4RVT_-2HFu", view:"https://www.canva.com/d/yl9-f3IuCRvTAo5" },
-    { id:"DAHJpIMSTh8", title:"סעיף לבדיקה", group:"plan", sub:"plan.general", pages:1, thumb:"https://design.canva.ai/UnWP-lrtu6BHosQ", edit:"https://www.canva.com/d/RkoB8cTNTqvu0W7", view:"https://www.canva.com/d/uhecYBwCOp2VtRu" },
+    { id:"DAHJQiQdcrs", title:"תוכנית בינוי: מכתב אישור", group:"plan", sub:"plan.general", pages:5, thumb:"thumbs/DAHJQiQdcrs.png", edit:"https://www.canva.com/d/ILK_n4RVT_-2HFu", view:"https://www.canva.com/d/yl9-f3IuCRvTAo5" },
+    { id:"DAHJpIMSTh8", title:"סעיף לבדיקה", group:"plan", sub:"plan.general", pages:1, thumb:"thumbs/DAHJpIMSTh8.png", edit:"https://www.canva.com/d/RkoB8cTNTqvu0W7", view:"https://www.canva.com/d/uhecYBwCOp2VtRu" },
 
     // ── שקופיות ודוחות > שקופיות ──
-    { id:"DAHCy9ToN8M", title:"שקופית אחידה: האגפים", group:"doc", sub:"doc.slides", pages:24, thumb:"https://design.canva.ai/voBg6n72lpqeKI5", edit:"https://www.canva.com/d/pJGmxQAJ2DT8mEG", view:"https://www.canva.com/d/fyEN5zqsOQTpsmg" },
-    { id:"DAHD6L8e3j4", title:"שקופית: סיכום 2025", group:"doc", sub:"doc.slides", pages:1, thumb:"https://design.canva.ai/1ONj3ko1lWDtW7h", edit:"https://www.canva.com/d/7vKlp_YyZE_zy2I", view:"https://www.canva.com/d/z6pas5ZvY8P_Sr8" },
-    { id:"DAHLrNHQuWM", title:"שקופית: מפת חום - 10 נושאים מובילים 106", group:"doc", sub:"doc.slides", pages:1, thumb:"https://design.canva.ai/XPrypHQAoeCFWVp", edit:"https://www.canva.com/d/O8js_k4D2kznUoz", view:"https://www.canva.com/d/1Tzr-nVgWs31sOk" },
+    { id:"DAHCy9ToN8M", title:"שקופית אחידה: האגפים", group:"doc", sub:"doc.slides", pages:24, thumb:"thumbs/DAHCy9ToN8M.png", edit:"https://www.canva.com/d/pJGmxQAJ2DT8mEG", view:"https://www.canva.com/d/fyEN5zqsOQTpsmg" },
+    { id:"DAHD6L8e3j4", title:"שקופית: סיכום 2025", group:"doc", sub:"doc.slides", pages:1, thumb:"thumbs/DAHD6L8e3j4.png", edit:"https://www.canva.com/d/7vKlp_YyZE_zy2I", view:"https://www.canva.com/d/z6pas5ZvY8P_Sr8" },
+    { id:"DAHLrNHQuWM", title:"שקופית: מפת חום - 10 נושאים מובילים 106", group:"doc", sub:"doc.slides", pages:1, thumb:"thumbs/DAHLrNHQuWM.png", edit:"https://www.canva.com/d/O8js_k4D2kznUoz", view:"https://www.canva.com/d/1Tzr-nVgWs31sOk" },
 
     // ── שקופיות ודוחות > דוחות וגיליונות ──
-    { id:"DAHLrI4vcdY", title:"דוח מוקד עירוני 106 - מאי 2026", group:"doc", sub:"doc.reports", pages:14, thumb:"https://design.canva.ai/Npa8mXnDsZn59cA", edit:"https://www.canva.com/d/VFnpW_Ioa3JchCo", view:"https://www.canva.com/d/nVBDEcJtUv73pKl" },
-    { id:"DAGsv-G-K5k", title:"גיליון: גדר מדברת - רובע לכיש", group:"doc", sub:"doc.reports", pages:11, thumb:"https://design.canva.ai/5gDGPcAQRY_4M28", edit:"https://www.canva.com/d/MqPY2EJ_wvz-FGa", view:"https://www.canva.com/d/DWrrKim2E_GCwVm" },
-    { id:"DAHJpO7IZ_A", title:"ציק ליסט + אישור מאי 2026", group:"doc", sub:"doc.reports", pages:1, thumb:"https://design.canva.ai/scl9UIP3KTrMRsj", edit:"https://www.canva.com/d/lmGg9dFaOa42oH5", view:"https://www.canva.com/d/9tu7Lf9SHo7egx6" },
+    { id:"DAHLrI4vcdY", title:"דוח מוקד עירוני 106 - מאי 2026", group:"doc", sub:"doc.reports", pages:14, thumb:"thumbs/DAHLrI4vcdY.png", edit:"https://www.canva.com/d/VFnpW_Ioa3JchCo", view:"https://www.canva.com/d/nVBDEcJtUv73pKl" },
+    { id:"DAGsv-G-K5k", title:"גיליון: גדר מדברת - רובע לכיש", group:"doc", sub:"doc.reports", pages:11, thumb:"thumbs/DAGsv-G-K5k.png", edit:"https://www.canva.com/d/MqPY2EJ_wvz-FGa", view:"https://www.canva.com/d/DWrrKim2E_GCwVm" },
+    { id:"DAHJpO7IZ_A", title:"ציק ליסט + אישור מאי 2026", group:"doc", sub:"doc.reports", pages:1, thumb:"thumbs/DAHJpO7IZ_A.png", edit:"https://www.canva.com/d/lmGg9dFaOa42oH5", view:"https://www.canva.com/d/9tu7Lf9SHo7egx6" },
 
     // ── מאמרים וידע > מאמרים ──
-    { id:"DAHJYBBTurw", title:"מאמר: ארכיטייפ תרבויות", group:"know", sub:"know.articles", pages:1, thumb:"https://design.canva.ai/nNMhGQt6PWOTNHx", edit:"https://www.canva.com/d/cSdd7jNCpT7oWV_", view:"https://www.canva.com/d/1p2WdEOhpt7aJUY" },
-    { id:"DAHImrDBygo", title:"הבונים החופשים", group:"know", sub:"know.articles", pages:1, thumb:"https://design.canva.ai/1ncegh5nka0yhmG", edit:"https://www.canva.com/d/PuCio-_80fMpMek", view:"https://www.canva.com/d/WB8818WQSGtPAZK" },
-    { id:"DAHENFF-cOk", title:"אסטנגלוב", group:"know", sub:"know.articles", pages:11, thumb:"https://design.canva.ai/Qi99aSS_DcQbFzG", edit:"https://www.canva.com/d/65hBuHIlODfpraj", view:"https://www.canva.com/d/1qL3iS-L4G-grAV" },
+    { id:"DAHJYBBTurw", title:"מאמר: ארכיטייפ תרבויות", group:"know", sub:"know.articles", pages:1, thumb:"thumbs/DAHJYBBTurw.png", edit:"https://www.canva.com/d/cSdd7jNCpT7oWV_", view:"https://www.canva.com/d/1p2WdEOhpt7aJUY" },
+    { id:"DAHImrDBygo", title:"הבונים החופשים", group:"know", sub:"know.articles", pages:1, thumb:"thumbs/DAHImrDBygo.png", edit:"https://www.canva.com/d/PuCio-_80fMpMek", view:"https://www.canva.com/d/WB8818WQSGtPAZK" },
+    { id:"DAHENFF-cOk", title:"אסטנגלוב", group:"know", sub:"know.articles", pages:11, thumb:"thumbs/DAHENFF-cOk.png", edit:"https://www.canva.com/d/65hBuHIlODfpraj", view:"https://www.canva.com/d/1qL3iS-L4G-grAV" },
 
     // ── מאמרים וידע > TED Talk ──
-    { id:"DAHD2JgGOdY", title:"דקה 0:00–1:00 — THE HOOK", group:"know", sub:"know.ted", pages:1, thumb:"https://design.canva.ai/72WjMDaJu32DAE8", edit:"https://www.canva.com/d/IHZgCo3dx578Qyc", view:"https://www.canva.com/d/bj35KoXGYZiLA1s" },
-    { id:"DAHD6f0D20o", title:"דקה 0:00–1:00 — הפתיחה: THE HOOK", group:"know", sub:"know.ted", pages:1, thumb:"https://design.canva.ai/-yo6A8bRFBmUJEa", edit:"https://www.canva.com/d/NBP0yBVc4ICcpTf", view:"https://www.canva.com/d/NNjJr-nSUfYSYzM" },
+    { id:"DAHD2JgGOdY", title:"דקה 0:00–1:00 — THE HOOK", group:"know", sub:"know.ted", pages:1, thumb:"thumbs/DAHD2JgGOdY.png", edit:"https://www.canva.com/d/IHZgCo3dx578Qyc", view:"https://www.canva.com/d/bj35KoXGYZiLA1s" },
+    { id:"DAHD6f0D20o", title:"דקה 0:00–1:00 — הפתיחה: THE HOOK", group:"know", sub:"know.ted", pages:1, thumb:"thumbs/DAHD6f0D20o.png", edit:"https://www.canva.com/d/NBP0yBVc4ICcpTf", view:"https://www.canva.com/d/NNjJr-nSUfYSYzM" },
 
     // ── מאמרים וידע > הדרכה ולימוד ──
-    { id:"DAHLXa-hpLw", title:"תרגיל: קורס מתקדמים 2", group:"know", sub:"know.learn", pages:20, thumb:"https://design.canva.ai/iN6aiQxZJzfRD-G", edit:"https://www.canva.com/d/SZYyXDZZheaVkyH", view:"https://www.canva.com/d/oAWqyrIU2yTUHU9" },
-    { id:"DAHCzQgzR5Q", title:"הדגשים למשרד החינוך - הסבר מעשי", group:"know", sub:"know.learn", pages:1, thumb:"https://design.canva.ai/Ce5FcM9-BTHC3FI", edit:"https://www.canva.com/d/uFc9-yEnJTqxrcP", view:"https://www.canva.com/d/1S1tcbAOjV0Xjh2" },
-    { id:"DAHDpCW2RUE", title:"מדריך: פרוגרמה לשטחי ציבור - מתחם הרצל המעפילים", group:"know", sub:"know.learn", pages:1, thumb:"https://design.canva.ai/_b-67FS_4FMr4Tj", edit:"https://www.canva.com/d/cMZVtlfCqHFmuah", view:"https://www.canva.com/d/u99NZ8jsCARljIT" },
-    { id:"DAHJoThI3zQ", title:"מדריך הנחיות וטופס בקשה - פודטראק", group:"know", sub:"know.learn", pages:1, thumb:"https://design.canva.ai/5I_u8If6Qjqg3ER", edit:"https://www.canva.com/d/OgwHspuRlOK__9R", view:"https://www.canva.com/d/uZ9DSQ2yNzKwFLG" },
+    { id:"DAHLXa-hpLw", title:"תרגיל: קורס מתקדמים 2", group:"know", sub:"know.learn", pages:20, thumb:"thumbs/DAHLXa-hpLw.png", edit:"https://www.canva.com/d/SZYyXDZZheaVkyH", view:"https://www.canva.com/d/oAWqyrIU2yTUHU9" },
+    { id:"DAHCzQgzR5Q", title:"הדגשים למשרד החינוך - הסבר מעשי", group:"know", sub:"know.learn", pages:1, thumb:"thumbs/DAHCzQgzR5Q.png", edit:"https://www.canva.com/d/uFc9-yEnJTqxrcP", view:"https://www.canva.com/d/1S1tcbAOjV0Xjh2" },
+    { id:"DAHDpCW2RUE", title:"מדריך: פרוגרמה לשטחי ציבור - מתחם הרצל המעפילים", group:"know", sub:"know.learn", pages:1, thumb:"thumbs/DAHDpCW2RUE.png", edit:"https://www.canva.com/d/cMZVtlfCqHFmuah", view:"https://www.canva.com/d/u99NZ8jsCARljIT" },
+    { id:"DAHJoThI3zQ", title:"מדריך הנחיות וטופס בקשה - פודטראק", group:"know", sub:"know.learn", pages:1, thumb:"thumbs/DAHJoThI3zQ.png", edit:"https://www.canva.com/d/OgwHspuRlOK__9R", view:"https://www.canva.com/d/uZ9DSQ2yNzKwFLG" },
 
     // ── יצירתי ואישי ──
-    { id:"DAHLW0NAQ8Y", title:"בניינים חולמים", group:"creative", sub:"creative", pages:8, thumb:"https://design.canva.ai/p8oiA0BgEkqbHnL", edit:"https://www.canva.com/d/YO6ZkTJEp_9s4jR", view:"https://www.canva.com/d/UwRzEK1oNrx_-0V" },
-    { id:"DAHLWoMyoHs", title:"חי צומח דומם", group:"creative", sub:"creative", pages:1, thumb:"https://design.canva.ai/YyRDX-ZrKzcM1so", edit:"https://www.canva.com/d/PudPQfcETSQl7-F", view:"https://www.canva.com/d/aXPd5Dve6Ax9N7s" },
-    { id:"DAHLWay9f9M", title:"דור 3", group:"creative", sub:"creative", pages:1, thumb:"https://design.canva.ai/Wmr6uMXriJCmrrp", edit:"https://www.canva.com/d/ehrsCbexgQIQLb9", view:"https://www.canva.com/d/jwJh-G7Is8v_UsV" },
-    { id:"DAHLWedyojE", title:"דור 2", group:"creative", sub:"creative", pages:1, thumb:"https://design.canva.ai/dJJRm3nRNU8sKKP", edit:"https://www.canva.com/d/9LSl2HwqX9g4dwK", view:"https://www.canva.com/d/NePpkWH6_xfQa_j" },
-    { id:"DAG0E7MyMWg", title:"פורמט: פרשת שבוע", group:"creative", sub:"creative", pages:50, thumb:"https://design.canva.ai/WN09iwvujWd_i7D", edit:"https://www.canva.com/d/exsdp1vyXIwHK9R", view:"https://www.canva.com/d/S03OswBAkZIXfb9" },
+    { id:"DAHLW0NAQ8Y", title:"בניינים חולמים", group:"creative", sub:"creative", pages:8, thumb:"thumbs/DAHLW0NAQ8Y.png", edit:"https://www.canva.com/d/YO6ZkTJEp_9s4jR", view:"https://www.canva.com/d/UwRzEK1oNrx_-0V" },
+    { id:"DAHLWoMyoHs", title:"חי צומח דומם", group:"creative", sub:"creative", pages:1, thumb:"thumbs/DAHLWoMyoHs.png", edit:"https://www.canva.com/d/PudPQfcETSQl7-F", view:"https://www.canva.com/d/aXPd5Dve6Ax9N7s" },
+    { id:"DAHLWay9f9M", title:"דור 3", group:"creative", sub:"creative", pages:1, thumb:"thumbs/DAHLWay9f9M.png", edit:"https://www.canva.com/d/ehrsCbexgQIQLb9", view:"https://www.canva.com/d/jwJh-G7Is8v_UsV" },
+    { id:"DAHLWedyojE", title:"דור 2", group:"creative", sub:"creative", pages:1, thumb:"thumbs/DAHLWedyojE.png", edit:"https://www.canva.com/d/9LSl2HwqX9g4dwK", view:"https://www.canva.com/d/NePpkWH6_xfQa_j" },
+    { id:"DAG0E7MyMWg", title:"פורמט: פרשת שבוע", group:"creative", sub:"creative", pages:50, thumb:"thumbs/DAG0E7MyMWg.png", edit:"https://www.canva.com/d/exsdp1vyXIwHK9R", view:"https://www.canva.com/d/S03OswBAkZIXfb9" },
 
     // ── כללי ──
-    { id:"DAHEQc6Z3ZE", title:"בלחיצת כפתור...", group:"other", sub:"other", pages:1, thumb:"https://design.canva.ai/VznOgV6abIQENtx", edit:"https://www.canva.com/d/Av2p1Lt_iQhnx7P", view:"https://www.canva.com/d/701kZqTeq7w6L33" },
-    { id:"DAHI7Fn5PgI", title:"2025 — שנה של עבודת בסיס", group:"other", sub:"other", pages:1, thumb:"https://design.canva.ai/PS90yy5cNBirWMH", edit:"https://www.canva.com/d/ZsDdfaOoeDlfIJx", view:"https://www.canva.com/d/dc4JDNdqoxHzhIh" },
-    { id:"DAHA58LWt7k", title:"תעודת הוקרה: שלמה", group:"other", sub:"other", pages:1, thumb:"https://design.canva.ai/CpwilBoD5QtfMG1", edit:"https://www.canva.com/d/ipa_EQLw1E98U5G", view:"https://www.canva.com/d/CJPxflKQzXRVa1d" },
-    { id:"DAHH8PDvZlc", title:"טבע עירוני: שמורת פלמינגו בשפך נחל לכיש", group:"other", sub:"other", pages:14, thumb:"https://design.canva.ai/kbrNXEzZknd7P9x", edit:"https://www.canva.com/d/osoxYbGcj1jMNrs", view:"https://www.canva.com/d/ksrD8lTAgpXrct1" },
-    { id:"DAHH9KQJW0Q", title:"מהיכן מגיעים המים לנחל לכיש?", group:"other", sub:"other", pages:1, thumb:"https://design.canva.ai/EOMimdEr7RBiplI", edit:"https://www.canva.com/d/s2oBpX5Y1qrrXVV", view:"https://www.canva.com/d/ZuLSodxi1VD5BKw" },
-    { id:"DAHLvv-NBqg", title:"שפה עיצובית: שימור", group:"other", sub:"other", pages:3, thumb:"https://design.canva.ai/UTk3eOxxFBg8_OY", edit:"https://www.canva.com/d/X_jAPBnO7vBFK5O", view:"https://www.canva.com/d/JX6J-7-MZnnNqpu" },
+    { id:"DAHEQc6Z3ZE", title:"בלחיצת כפתור...", group:"other", sub:"other", pages:1, thumb:"thumbs/DAHEQc6Z3ZE.png", edit:"https://www.canva.com/d/Av2p1Lt_iQhnx7P", view:"https://www.canva.com/d/701kZqTeq7w6L33" },
+    { id:"DAHI7Fn5PgI", title:"2025 — שנה של עבודת בסיס", group:"other", sub:"other", pages:1, thumb:"thumbs/DAHI7Fn5PgI.png", edit:"https://www.canva.com/d/ZsDdfaOoeDlfIJx", view:"https://www.canva.com/d/dc4JDNdqoxHzhIh" },
+    { id:"DAHA58LWt7k", title:"תעודת הוקרה: שלמה", group:"other", sub:"other", pages:1, thumb:"thumbs/DAHA58LWt7k.png", edit:"https://www.canva.com/d/ipa_EQLw1E98U5G", view:"https://www.canva.com/d/CJPxflKQzXRVa1d" },
+    { id:"DAHH8PDvZlc", title:"טבע עירוני: שמורת פלמינגו בשפך נחל לכיש", group:"other", sub:"other", pages:14, thumb:"thumbs/DAHH8PDvZlc.png", edit:"https://www.canva.com/d/osoxYbGcj1jMNrs", view:"https://www.canva.com/d/ksrD8lTAgpXrct1" },
+    { id:"DAHH9KQJW0Q", title:"מהיכן מגיעים המים לנחל לכיש?", group:"other", sub:"other", pages:1, thumb:"thumbs/DAHH9KQJW0Q.png", edit:"https://www.canva.com/d/s2oBpX5Y1qrrXVV", view:"https://www.canva.com/d/ZuLSodxi1VD5BKw" },
+    { id:"DAHLvv-NBqg", title:"שפה עיצובית: שימור", group:"other", sub:"other", pages:3, thumb:"thumbs/DAHLvv-NBqg.png", edit:"https://www.canva.com/d/X_jAPBnO7vBFK5O", view:"https://www.canva.com/d/JX6J-7-MZnnNqpu" },
 ];
 
 // ═══════════════════════════════════════════════
@@ -1134,7 +1144,8 @@ function cardHTML(d) {
             <button class="card-act-btn card-act-del" onclick="event.stopPropagation();confirmDelete('${d.id}')" title="מחיקה">&#10005;</button>
         </div>
         <div class="card-thumb">
-            <img src="${d.thumb}" alt="${d.title}" loading="lazy" onerror="this.style.display='none'">
+            <img src="${d.thumb}" alt="${d.title}" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
+            <div class="card-thumb-fallback"><span class="fb-icon">&#128196;</span><span class="fb-title">${d.title}</span></div>
             <div class="card-overlay">
                 <button class="overlay-btn btn-view" onclick="event.stopPropagation();openViewer('${d.id}')">צפייה</button>
                 <button class="overlay-btn btn-edit" onclick="event.stopPropagation();window.open('${d.edit}','_blank')">עריכה</button>
@@ -1155,7 +1166,7 @@ function listHTML(d) {
     const checked = selectedIds.has(d.id);
     return `<div class="list-item" onclick="openViewer('${d.id}')">
         <div class="list-check${checked ? ' checked' : ''}" onclick="event.stopPropagation();toggleSelect('${d.id}',this)">${checked ? '&#10003;' : ''}</div>
-        <div class="list-thumb"><img src="${d.thumb}" alt="" loading="lazy" onerror="this.style.display='none'"></div>
+        <div class="list-thumb"><img src="${d.thumb}" alt="" loading="lazy" onerror="this.style.display='none';this.parentElement.innerHTML='<span style=\\'font-size:18px;display:flex;align-items:center;justify-content:center;width:100%;height:100%\\'>&#128196;</span>'"></div>
         <span class="list-title" title="${d.title}">${d.title}</span>
         <span class="list-type card-type" style="background:${color}22;color:${color}">${getFilterLabel(d.sub)}</span>
         <span class="list-pages">${d.pages > 1 ? d.pages+" עמ'" : '-'}</span>
