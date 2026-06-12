@@ -249,7 +249,7 @@
         .designs-grid:not(.active) { display: none; }
         .list-item {
             display: grid;
-            grid-template-columns: 48px 1fr 100px 60px auto;
+            grid-template-columns: 24px 48px 1fr 100px 60px auto;
             align-items: center; gap: 12px; padding: 8px 14px;
             background: var(--surface); border: 1px solid var(--border);
             border-radius: 8px; cursor: pointer; transition: all 0.15s;
@@ -508,6 +508,47 @@
         .nav-add-sub { cursor: pointer; }
         .nav-add-sub:hover { background: var(--surface-2); }
 
+        /* ─── Multi-select ─── */
+        .card-check {
+            position: absolute; top: 6px; left: 6px; z-index: 6;
+            width: 22px; height: 22px; border-radius: 5px;
+            border: 2px solid rgba(255,255,255,0.5); background: rgba(0,0,0,0.3);
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 14px; color: white; transition: all 0.15s;
+            opacity: 0;
+        }
+        .design-card:hover .card-check, .card-check.checked { opacity: 1; }
+        .card-check.checked {
+            background: var(--accent); border-color: var(--accent);
+        }
+        .list-check {
+            width: 18px; height: 18px; border-radius: 4px;
+            border: 2px solid var(--border); background: transparent;
+            cursor: pointer; display: flex; align-items: center; justify-content: center;
+            font-size: 12px; color: white; transition: all 0.15s; flex-shrink: 0;
+        }
+        .list-check.checked {
+            background: var(--accent); border-color: var(--accent);
+        }
+        .bulk-bar {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            z-index: 450; background: var(--accent); border-radius: 12px;
+            padding: 10px 20px; display: none; align-items: center; gap: 14px;
+            box-shadow: 0 8px 32px rgba(108,99,255,0.4);
+            animation: modalIn 0.2s ease; color: white;
+        }
+        .bulk-bar.active { display: flex; }
+        .bulk-bar span { font-size: 14px; font-weight: 600; }
+        .bulk-btn {
+            padding: 7px 16px; border: none; border-radius: 8px;
+            font-family: 'Heebo', sans-serif; font-size: 13px;
+            font-weight: 600; cursor: pointer; transition: opacity 0.15s;
+        }
+        .bulk-btn:hover { opacity: 0.85; }
+        .bulk-move { background: white; color: var(--accent); }
+        .bulk-del { background: #e06c75; color: white; }
+        .bulk-cancel { background: rgba(255,255,255,0.2); color: white; }
+
         .empty-state { text-align: center; padding: 60px 20px; color: var(--text-dim); }
 
         ::-webkit-scrollbar { width: 6px; }
@@ -573,6 +614,13 @@
         <button class="catalog-close" onclick="closeCatalog()">&#10005;</button>
     </div>
     <div class="catalog-body" id="catalogBody"></div>
+</div>
+
+<div class="bulk-bar" id="bulkBar">
+    <span id="bulkCount">0 נבחרו</span>
+    <button class="bulk-btn bulk-move" onclick="openBulkCatalog()">&#8644; העברה לתיקייה</button>
+    <button class="bulk-btn bulk-del" onclick="confirmBulkDelete()">&#10005; מחיקה</button>
+    <button class="bulk-btn bulk-cancel" onclick="clearSelection()">ביטול</button>
 </div>
 
 <div class="confirm-bar" id="confirmBar">
@@ -1078,7 +1126,9 @@ function renderFlat(items, area) {
 
 function cardHTML(d) {
     const color = getGroupColor(d.group);
+    const checked = selectedIds.has(d.id);
     return `<div class="design-card" onclick="openViewer('${d.id}')">
+        <div class="card-check${checked ? ' checked' : ''}" onclick="event.stopPropagation();toggleSelect('${d.id}',this)">${checked ? '&#10003;' : ''}</div>
         <div class="card-actions">
             <button class="card-act-btn card-act-move" onclick="event.stopPropagation();openCatalog('${d.id}')" title="העברה לקטגוריה">&#8644;</button>
             <button class="card-act-btn card-act-del" onclick="event.stopPropagation();confirmDelete('${d.id}')" title="מחיקה">&#10005;</button>
@@ -1102,7 +1152,9 @@ function cardHTML(d) {
 
 function listHTML(d) {
     const color = getGroupColor(d.group);
+    const checked = selectedIds.has(d.id);
     return `<div class="list-item" onclick="openViewer('${d.id}')">
+        <div class="list-check${checked ? ' checked' : ''}" onclick="event.stopPropagation();toggleSelect('${d.id}',this)">${checked ? '&#10003;' : ''}</div>
         <div class="list-thumb"><img src="${d.thumb}" alt="" loading="lazy" onerror="this.style.display='none'"></div>
         <span class="list-title" title="${d.title}">${d.title}</span>
         <span class="list-type card-type" style="background:${color}22;color:${color}">${getFilterLabel(d.sub)}</span>
@@ -1181,6 +1233,122 @@ function submitSubfolder(parentId) {
     if (name.trim()) {
         addCustomSubfolder(parentId, name);
     }
+}
+
+// ═══════════════════════════════════════════════
+// Multi-select
+// ═══════════════════════════════════════════════
+const selectedIds = new Set();
+
+function toggleSelect(id, el) {
+    if (selectedIds.has(id)) {
+        selectedIds.delete(id);
+        el.classList.remove('checked');
+        el.innerHTML = '';
+    } else {
+        selectedIds.add(id);
+        el.classList.add('checked');
+        el.innerHTML = '&#10003;';
+    }
+    updateBulkBar();
+}
+
+function updateBulkBar() {
+    const bar = document.getElementById('bulkBar');
+    if (selectedIds.size > 0) {
+        bar.classList.add('active');
+        document.getElementById('bulkCount').textContent = selectedIds.size + ' נבחרו';
+    } else {
+        bar.classList.remove('active');
+    }
+}
+
+function clearSelection() {
+    selectedIds.clear();
+    document.querySelectorAll('.card-check.checked,.list-check.checked').forEach(el => {
+        el.classList.remove('checked');
+        el.innerHTML = '';
+    });
+    updateBulkBar();
+}
+
+function openBulkCatalog() {
+    if (selectedIds.size === 0) return;
+    catalogDesignId = null;
+    const body = document.getElementById('catalogBody');
+    let html = '<div class="catalog-item-name">&#128230; העברת ' + selectedIds.size + ' תוצרים</div>';
+
+    tree.forEach(g => {
+        const hasChildren = g.children && g.children.length > 0;
+        const isCustom = g.custom;
+        if (hasChildren || isCustom) {
+            html += '<div class="catalog-group" data-gid="' + g.id + '">';
+            html += '<div class="catalog-group-title" onclick="bulkMoveTo(\'' + g.id + '\',\'' + g.id + '\')"><span class="cg-dot" style="background:' + g.color + '"></span>' + g.label + '</div>';
+            html += '<div class="catalog-sub">';
+            (g.children || []).forEach(c => {
+                html += '<div class="catalog-option" onclick="bulkMoveTo(\'' + g.id + '\',\'' + c.id + '\')">';
+                html += '<span class="co-dot"></span>' + c.label + '</div>';
+            });
+            if (isCustom) {
+                html += '<div class="catalog-option" style="color:var(--accent-2)" onclick="event.stopPropagation();showCatalogSubInput(\'' + g.id + '\',true)"><span class="co-dot" style="background:var(--accent-2)"></span>+ תת-נושא חדש</div>';
+                html += '<div class="catalog-input-row" id="catalogSubRow_' + g.id + '" style="display:none">';
+                html += '<input type="text" id="catalogSubName_' + g.id + '" placeholder="שם תת-הנושא..." onkeydown="if(event.key===\'Enter\')submitCatalogSub(\'' + g.id + '\');if(event.key===\'Escape\')this.parentElement.style.display=\'none\'">';
+                html += '<button class="fi-ok" onclick="submitCatalogSub(\'' + g.id + '\')">&#10003;</button>';
+                html += '</div>';
+            }
+            html += '</div></div>';
+        } else {
+            html += '<div class="catalog-option" onclick="bulkMoveTo(\'' + g.id + '\',\'' + g.id + '\')">';
+            html += '<span class="cg-dot" style="background:' + g.color + ';width:8px;height:8px;border-radius:50%;flex-shrink:0"></span>' + g.label + '</div>';
+        }
+    });
+
+    html += '<div class="catalog-new-folder" onclick="showCatalogNewFolder(true)">&#43; תיקייה חדשה</div>';
+    html += '<div class="catalog-input-row" id="catalogNewFolderRow" style="display:none">';
+    html += '<input type="text" id="catalogNewFolderName" placeholder="שם התיקייה..." onkeydown="if(event.key===\'Enter\')submitCatalogNewFolder(true);if(event.key===\'Escape\')document.getElementById(\'catalogNewFolderRow\').style.display=\'none\'">';
+    html += '<button class="fi-ok" onclick="submitCatalogNewFolder(true)">&#10003;</button>';
+    html += '</div>';
+
+    body.innerHTML = html;
+    document.getElementById('catalogModal').classList.add('active');
+    document.getElementById('viewerBackdrop').classList.add('active');
+}
+
+function bulkMoveTo(group, sub) {
+    selectedIds.forEach(id => {
+        const d = designs.find(x => x.id === id);
+        if (d) {
+            d.group = group;
+            d.sub = sub;
+            saveMove(id, group, sub);
+        }
+    });
+    clearSelection();
+    closeCatalog();
+    buildSidebar();
+    renderContent();
+}
+
+function confirmBulkDelete() {
+    if (selectedIds.size === 0) return;
+    document.getElementById('confirmText').textContent = 'למחוק ' + selectedIds.size + ' תוצרים?';
+    document.getElementById('confirmBar').classList.add('active');
+    document.getElementById('confirmYes').onclick = function() { executeBulkDelete(); };
+}
+
+function executeBulkDelete() {
+    selectedIds.forEach(id => {
+        const idx = designs.findIndex(x => x.id === id);
+        if (idx > -1) {
+            saveDelete(id);
+            designs.splice(idx, 1);
+        }
+    });
+    clearSelection();
+    closeConfirm();
+    buildSidebar();
+    document.getElementById('totalCount').textContent = designs.length;
+    renderContent();
 }
 
 // ═══════════════════════════════════════════════
@@ -1272,19 +1440,22 @@ function openCatalog(id) {
     document.getElementById('viewerBackdrop').classList.add('active');
 }
 
-function showCatalogNewFolder() {
+function showCatalogNewFolder(bulk) {
     const row = document.getElementById('catalogNewFolderRow');
     row.style.display = 'flex';
+    row.dataset.bulk = bulk ? '1' : '';
     document.getElementById('catalogNewFolderName').value = '';
     document.getElementById('catalogNewFolderName').focus();
 }
-function submitCatalogNewFolder() {
+function submitCatalogNewFolder(bulk) {
     const name = document.getElementById('catalogNewFolderName').value;
     if (!name.trim()) return;
-    addCustomFolder(name);
-    const newFolder = tree[tree.length - 1];
-    if (catalogDesignId) {
-        moveTo(catalogDesignId, newFolder.id, newFolder.id);
+    var folder = addCustomFolder(name);
+    var isBulk = bulk || document.getElementById('catalogNewFolderRow').dataset.bulk === '1';
+    if (isBulk && selectedIds.size > 0) {
+        bulkMoveTo(folder.id, folder.id);
+    } else if (catalogDesignId) {
+        moveTo(catalogDesignId, folder.id, folder.id);
     }
 }
 function showCatalogSubInput(parentId) {
@@ -1299,7 +1470,9 @@ function submitCatalogSub(parentId) {
     var inp = document.getElementById('catalogSubName_' + parentId);
     if (!inp || !inp.value.trim()) return;
     var subId = addCustomSubfolder(parentId, inp.value);
-    if (subId && catalogDesignId) {
+    if (subId && selectedIds.size > 0 && !catalogDesignId) {
+        bulkMoveTo(parentId, subId);
+    } else if (subId && catalogDesignId) {
         moveTo(catalogDesignId, parentId, subId);
     }
 }
