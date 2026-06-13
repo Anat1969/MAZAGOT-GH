@@ -314,13 +314,13 @@
         }
         .viewer-close:hover { background: rgba(0,0,0,0.8); }
         .viewer-img-wrap {
-            width: 100%; max-height: 420px; overflow: hidden;
+            width: 100%; max-height: 520px; overflow: hidden;
             background: var(--surface-2); display: flex;
             align-items: center; justify-content: center;
         }
         .viewer-img-wrap img {
             width: 100%; height: 100%; object-fit: contain;
-            max-height: 420px;
+            max-height: 520px;
         }
         .viewer-body { padding: 20px 24px; }
         .viewer-modal-title {
@@ -506,15 +506,23 @@
         .nav-folder-actions {
             display: flex; gap: 2px; margin-right: auto;
         }
-        .nav-folder-del {
+        .nav-folder-del, .nav-folder-edit {
             background: none; border: none; color: var(--text-dim);
             font-size: 12px; cursor: pointer; padding: 2px 4px;
             border-radius: 4px; opacity: 0; transition: opacity 0.15s;
         }
-        .nav-parent:hover .nav-folder-del { opacity: 1; }
+        .nav-parent:hover .nav-folder-del,
+        .nav-parent:hover .nav-folder-edit { opacity: 1; }
         .nav-folder-del:hover { color: #e06c75; }
-        .nav-child .nav-folder-del { opacity: 0; }
-        .nav-child:hover .nav-folder-del { opacity: 1; }
+        .nav-folder-edit:hover { color: var(--accent-2); }
+        .nav-child .nav-folder-del, .nav-child .nav-folder-edit { opacity: 0; }
+        .nav-child:hover .nav-folder-del,
+        .nav-child:hover .nav-folder-edit { opacity: 1; }
+        .nav-rename-input {
+            background: var(--surface-2); border: 1px solid var(--accent);
+            border-radius: 4px; color: var(--text); font-family: 'Heebo', sans-serif;
+            font-size: 13px; padding: 2px 8px; outline: none; width: 120px;
+        }
         .nav-add-sub { cursor: pointer; }
         .nav-add-sub:hover { background: var(--surface-2); }
 
@@ -649,10 +657,8 @@
         <div class="viewer-modal-title" id="viewerTitle">-</div>
         <div class="viewer-modal-sub" id="viewerSub"></div>
         <div class="viewer-buttons">
-            <a id="viewerEditLink" class="viewer-btn btn-canva-edit" href="#" target="_blank">&#9998; עריכה בקנבה</a>
-            <a id="viewerViewLink" class="viewer-btn btn-canva-view" href="#" target="_blank">&#9655; צפייה בקנבה</a>
+            <a id="viewerEditLink" class="viewer-btn btn-canva-edit" href="#" target="_blank">&#9998; פתיחה בקנבה</a>
         </div>
-        <div class="viewer-hint">הקישורים נפתחים ישירות בקנבה בטאב חדש</div>
     </div>
 </div>
 
@@ -901,9 +907,30 @@ function addCustomSubfolder(parentId, name) {
     if (!parent) return;
     const subId = parentId + '.' + Date.now();
     parent.children.push({ id: subId, label: name });
-    saveCustomFolders();
+    if (parent.custom) saveCustomFolders();
+    else saveAddedSubs();
     buildSidebar();
     return subId;
+}
+function saveAddedSubs() {
+    const added = {};
+    tree.filter(t => !t.custom).forEach(g => {
+        const extra = (g.children || []).filter(c => c.id.includes('.') && /\.\d+$/.test(c.id));
+        if (extra.length) added[g.id] = extra;
+    });
+    localStorage.setItem('mazagot_added_subs', JSON.stringify(added));
+}
+function loadAddedSubs() {
+    const added = JSON.parse(localStorage.getItem('mazagot_added_subs') || '{}');
+    for (const [parentId, subs] of Object.entries(added)) {
+        const g = tree.find(t => t.id === parentId);
+        if (!g) continue;
+        subs.forEach(s => {
+            if (!g.children.find(c => c.id === s.id)) {
+                g.children.push(s);
+            }
+        });
+    }
 }
 function deleteCustomSubfolder(parentId, subId) {
     const parent = tree.find(t => t.id === parentId);
@@ -942,6 +969,150 @@ function deleteCustomFolder(folderId) {
     renderContent();
 }
 loadCustomFolders();
+loadAddedSubs();
+
+// ─── Rename persistence ───
+function loadRenames() {
+    const renames = JSON.parse(localStorage.getItem('mazagot_renames') || '{}');
+    for (const g of tree) {
+        if (renames[g.id]) g.label = renames[g.id];
+        for (const c of (g.children || [])) {
+            if (renames[c.id]) c.label = renames[c.id];
+        }
+    }
+}
+function saveRename(id, newLabel) {
+    const obj = JSON.parse(localStorage.getItem('mazagot_renames') || '{}');
+    obj[id] = newLabel;
+    localStorage.setItem('mazagot_renames', JSON.stringify(obj));
+}
+
+// ─── Deleted built-in categories persistence ───
+function loadDeletedCategories() {
+    const deleted = JSON.parse(localStorage.getItem('mazagot_deleted_categories') || '[]');
+    for (let i = tree.length - 1; i >= 0; i--) {
+        if (deleted.includes(tree[i].id)) {
+            tree.splice(i, 1);
+            continue;
+        }
+        const g = tree[i];
+        if (g.children) {
+            for (let j = g.children.length - 1; j >= 0; j--) {
+                if (deleted.includes(g.children[j].id)) {
+                    g.children.splice(j, 1);
+                }
+            }
+        }
+    }
+}
+function saveDeletedCategory(id) {
+    const arr = JSON.parse(localStorage.getItem('mazagot_deleted_categories') || '[]');
+    if (!arr.includes(id)) arr.push(id);
+    localStorage.setItem('mazagot_deleted_categories', JSON.stringify(arr));
+}
+loadDeletedCategories();
+loadRenames();
+
+// ─── Rename UI ───
+function renameCategory(id) {
+    const g = tree.find(t => t.id === id);
+    if (!g) return;
+    const el = document.querySelector(`.nav-parent[data-filter="${id}"]`);
+    if (!el) return;
+    const oldLabel = g.label;
+    const input = document.createElement('input');
+    input.className = 'nav-rename-input';
+    input.value = oldLabel;
+    const labelNode = [...el.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+    if (!labelNode) return;
+    labelNode.textContent = '';
+    el.insertBefore(input, labelNode.nextSibling || el.querySelector('.nav-folder-edit'));
+    input.focus();
+    input.select();
+    function finish() {
+        const val = input.value.trim();
+        if (val && val !== oldLabel) {
+            g.label = val;
+            if (g.custom) saveCustomFolders();
+            saveRename(id, val);
+        }
+        buildSidebar();
+        renderContent();
+    }
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') finish(); if (e.key === 'Escape') { buildSidebar(); } });
+    input.addEventListener('blur', finish);
+}
+
+function renameSubcategory(parentId, subId) {
+    const g = tree.find(t => t.id === parentId);
+    if (!g) return;
+    const c = (g.children || []).find(x => x.id === subId);
+    if (!c) return;
+    const el = document.querySelector(`.nav-child[data-filter="${subId}"]`);
+    if (!el) return;
+    const oldLabel = c.label;
+    const input = document.createElement('input');
+    input.className = 'nav-rename-input';
+    input.value = oldLabel;
+    const labelNode = [...el.childNodes].find(n => n.nodeType === 3 && n.textContent.trim());
+    if (!labelNode) return;
+    labelNode.textContent = '';
+    el.insertBefore(input, labelNode.nextSibling || el.querySelector('.nav-folder-edit'));
+    input.focus();
+    input.select();
+    function finish() {
+        const val = input.value.trim();
+        if (val && val !== oldLabel) {
+            c.label = val;
+            if (g.custom) saveCustomFolders();
+            saveRename(subId, val);
+        }
+        buildSidebar();
+        renderContent();
+    }
+    input.addEventListener('keydown', e => { if (e.key === 'Enter') finish(); if (e.key === 'Escape') { buildSidebar(); } });
+    input.addEventListener('blur', finish);
+}
+
+// ─── Generic delete (works for built-in and custom) ───
+function deleteCategory(folderId) {
+    const g = tree.find(t => t.id === folderId);
+    if (!g) return;
+    if (folderId === 'other') return;
+    const subIds = (g.children || []).map(c => c.id);
+    designs.forEach(d => {
+        if (d.group === folderId || subIds.includes(d.sub)) {
+            d.group = 'other'; d.sub = 'other';
+            saveMove(d.id, 'other', 'other');
+        }
+    });
+    const idx = tree.indexOf(g);
+    if (idx > -1) tree.splice(idx, 1);
+    if (g.custom) saveCustomFolders();
+    else saveDeletedCategory(folderId);
+    if (currentFilter === folderId || subIds.includes(currentFilter)) currentFilter = 'all';
+    buildSidebar();
+    renderContent();
+}
+
+function deleteSubcategory(parentId, subId) {
+    const g = tree.find(t => t.id === parentId);
+    if (!g) return;
+    const idx = (g.children || []).findIndex(c => c.id === subId);
+    if (idx === -1) return;
+    designs.forEach(d => {
+        if (d.sub === subId) {
+            d.group = parentId; d.sub = parentId;
+            saveMove(d.id, parentId, parentId);
+        }
+    });
+    g.children.splice(idx, 1);
+    if (g.custom) saveCustomFolders();
+    else { saveDeletedCategory(subId); saveAddedSubs(); }
+    if (currentFilter === subId) currentFilter = parentId;
+    buildSidebar();
+    renderContent();
+}
 
 // ═══════════════════════════════════════════════
 // State
@@ -966,13 +1137,14 @@ function buildSidebar() {
     </div>`;
 
     tree.forEach(g => {
-        const isCustom = g.custom;
+        const notOther = g.id !== 'other';
         html += `<div class="nav-group" data-group="${g.id}">
             <div class="nav-parent" data-filter="${g.id}" onclick="toggleGroup(this,'${g.id}')">
                 <span class="nav-arrow">&#9654;</span>
                 <div class="nav-dot" style="background:${g.color}"></div>
                 ${g.label}
-                ${isCustom ? `<button class="nav-folder-del" onclick="event.stopPropagation();deleteCustomFolder('${g.id}')" title="מחק תיקייה">&#10005;</button>` : ''}
+                <button class="nav-folder-edit" onclick="event.stopPropagation();renameCategory('${g.id}')" title="שנה שם">&#9998;</button>
+                ${notOther ? `<button class="nav-folder-del" onclick="event.stopPropagation();deleteCategory('${g.id}')" title="מחק קטגוריה">&#10005;</button>` : ''}
                 <span class="nav-count">${countByGroup[g.id] || 0}</span>
             </div>
             <div class="nav-children">`;
@@ -980,21 +1152,20 @@ function buildSidebar() {
             html += `<div class="nav-child" data-filter="${c.id}" onclick="navigate('${c.id}',this)">
                 <div class="nav-child-dot"></div>
                 ${c.label}
-                ${isCustom ? `<button class="nav-folder-del" onclick="event.stopPropagation();deleteCustomSubfolder('${g.id}','${c.id}')" title="מחק תת-נושא">&#10005;</button>` : ''}
+                <button class="nav-folder-edit" onclick="event.stopPropagation();renameSubcategory('${g.id}','${c.id}')" title="שנה שם">&#9998;</button>
+                <button class="nav-folder-del" onclick="event.stopPropagation();deleteSubcategory('${g.id}','${c.id}')" title="מחק תת-נושא">&#10005;</button>
                 <span class="nav-count">${countBySub[c.id] || 0}</span>
             </div>`;
         });
-        if (isCustom) {
-            html += `<div class="nav-child nav-add-sub" onclick="event.stopPropagation();showSubfolderInput('${g.id}')">
-                <div class="nav-child-dot" style="background:var(--accent-2)"></div>
-                <span style="color:var(--accent-2)">+ תת-נושא</span>
-            </div>`;
-            html += `<div class="folder-input-row" id="subFolderRow_${g.id}" style="display:none">
-                <input type="text" id="subFolderName_${g.id}" placeholder="שם תת-הנושא..." onkeydown="if(event.key==='Enter')submitSubfolder('${g.id}');if(event.key==='Escape')this.parentElement.style.display='none'">
-                <button class="fi-ok" onclick="submitSubfolder('${g.id}')">&#10003;</button>
-                <button class="fi-cancel" onclick="document.getElementById('subFolderRow_${g.id}').style.display='none'">&#10005;</button>
-            </div>`;
-        }
+        html += `<div class="nav-child nav-add-sub" onclick="event.stopPropagation();showSubfolderInput('${g.id}')">
+            <div class="nav-child-dot" style="background:var(--accent-2)"></div>
+            <span style="color:var(--accent-2)">+ תת-נושא</span>
+        </div>`;
+        html += `<div class="folder-input-row" id="subFolderRow_${g.id}" style="display:none">
+            <input type="text" id="subFolderName_${g.id}" placeholder="שם תת-הנושא..." onkeydown="if(event.key==='Enter')submitSubfolder('${g.id}');if(event.key==='Escape')this.parentElement.style.display='none'">
+            <button class="fi-ok" onclick="submitSubfolder('${g.id}')">&#10003;</button>
+            <button class="fi-cancel" onclick="document.getElementById('subFolderRow_${g.id}').style.display='none'">&#10005;</button>
+        </div>`;
         html += `</div></div>`;
     });
 
@@ -1196,7 +1367,6 @@ function openViewer(id) {
         (d.pages > 1 ? '  ·  ' + d.pages + ' עמודים' : '');
     document.getElementById('viewerImg').src = d.thumb;
     document.getElementById('viewerEditLink').href = d.edit;
-    document.getElementById('viewerViewLink').href = d.view;
     document.getElementById('viewerModal').classList.add('active');
     document.getElementById('viewerBackdrop').classList.add('active');
 }
