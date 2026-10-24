@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://appofapp-gh.vercel.app/ai-menu.js"></script>
     <title>מאגר תוצרים | קנבה</title>
     <link href="https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <style>
@@ -586,7 +587,8 @@
                 inset: 64px 0 0 auto; width: 300px; z-index: 150;
             }
             .viewer-panel { width: 100vw; }
-            .search-box { width: 200px; }
+            .header { gap: 10px; padding: 0 12px; }
+            .search-box { width: auto; flex: 1 1 0; min-width: 0; }
             .header-stats { display: none; }
             .mobile-menu-btn { display: block; }
         }
@@ -607,6 +609,7 @@
         <div class="header-stats">
             <span><span class="stat-num" id="totalCount">0</span> תוצרים</span>
         </div>
+        <ai-menu></ai-menu>
     </header>
 
     <nav class="sidebar" id="sidebar"></nav>
